@@ -2,6 +2,9 @@
  * Created by Black Phoenix on 13/05/2016.
  */
 
+// Inteface variables
+var currentLv=1;
+var user;
 
 //////////////////////////// classe Punt ///////////////////////////
 function Punt(x,y){
@@ -21,7 +24,7 @@ Punt.distanciaPuntPunt=function(p1,p2){
 function Cercle(centre,radi,color){
     this.centre = centre;  // és un Punt
     this.radi = radi;
-    this.color = color || "rgba(200, 200, 100, .9)";
+    this.color = color || "rgba(255, 255, 255, .8)";
 }
 Cercle.prototype.dibuixar = function(ctx){
     ctx.fillStyle = this.color;
@@ -37,7 +40,7 @@ function Segment(p1, p2, gruix, color) {
     this.p1 = p1;  // és un Punt
     this.p2 = p2;
     this.gruix = gruix;
-    this.color = color || "#cfc";
+    this.color = color || "#AADDFF";
 }
 ////// Mètodes públics
 Segment.prototype.dibuixar = function(ctx) {
@@ -51,6 +54,8 @@ Segment.prototype.dibuixar = function(ctx) {
 ////// Mètodes estàtics
 Segment.esTallen=function (segment1, segment2){
 
+
+
 }
 
 Segment.contePunt=function(segment, punt){
@@ -59,8 +64,14 @@ Segment.contePunt=function(segment, punt){
 
 ////// Classe estàtica  //////
 function Utilitats(){
+
+    
 }
 /// Mètodes estàtics //////
+
+Utilitats.setLv=function setLv(Lv){localStorage.setItem('nivell', Lv);}
+Utilitats.getLv=function getLv(Lv){return localStorage.getItem('nivell');}
+
 Utilitats.nombreAleatoriEntre= function(a,b){
     return Math.floor(Math.random()*(b-a+a)) + a;
 }
@@ -77,6 +88,7 @@ var jocDesenredar = {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function(){
+    $("#joc").hide();
     jocDesenredar.canvas = document.getElementById("canvas");  // afegim a la variable global jocDesenredar
     jocDesenredar.ctx = jocDesenredar.canvas.getContext("2d");
 
@@ -144,4 +156,12 @@ function actualitzaFotograma() {
 }
 
 
-//////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////
+ /// Interface  ////
+///////////////////
+
+$("#start").click(function(e) {
+        $("#menu").hide();
+        $("#joc").show();
+        user = $("#user").value;
+});
