@@ -1,6 +1,6 @@
 # Practica 3
 
-### Estado actual:
+### Estado actual
 
 * Redes funcionales
 * Generación de redes
@@ -8,7 +8,7 @@
 * Reloj
 
 
-## TODO:
+## TODO
 
 - Funciones de colisión
 - Transición de niveles
@@ -18,6 +18,6 @@
 - Asegurarse de que los auto-generados tienen solución
 
 
-### Extra:
+### Extra
 * Creación personalizada de niveles
 * Append canvas con las dimensiones del documento (maximizarlo)
