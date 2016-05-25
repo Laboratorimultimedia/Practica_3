@@ -65,7 +65,53 @@ Segment.contePunt=function(segment, punt){
 ////// Classe estàtica  //////
 function Utilitats(){
 
-    
+    var Nivell_1 = {
+        "nivell" : 1,
+        "cercles" : [{"x" : 400, "y" : 156},
+            {"x" : 381, "y" : 241},
+            {"x" : 84 , "y" : 233},
+            {"x" : 88 , "y" : 73 }],
+        "connexions" : {"0" : {"connectaAmb" : [1,2]},
+            "1" : {"connectaAmb" : [3]},
+            "2" : {"connectaAmb" : [3]}}
+    };
+
+    var Nivell_2={
+        "nivell" : 2,
+        "cercles" : [{"x" : 401, "y" : 73 },
+            {"x" : 400, "y" : 240},
+            {"x" : 88 , "y" : 241},
+            {"x" : 84 , "y" : 72 }],
+        "connexions" : {"0" : {"connectaAmb" : [1,2,3]},
+            "1" : {"connectaAmb" : [2,3]},
+            "2" : {"connectaAmb" : [3]}}
+    };
+
+    var Nivell_3={
+        "nivell" : 3,
+        "cercles" : [{"x" : 92 , "y" : 85 },
+            {"x" : 253, "y" : 13 },
+            {"x" : 393, "y" : 86 },
+            {"x" : 390, "y" : 214},
+            {"x" : 248, "y" : 275}],
+        "connexions" : {"0" : {"connectaAmb" : [1,2,3,4]},
+            "1" : {"connectaAmb" : [2,3]},
+            "2" : {"connectaAmb" : [3]}}
+    };
+
+    var Nivell_4={
+        "nivell" : 4,
+        "cercles" : [{"x" : 92 , "y" : 85 },
+            {"x" : 253, "y" : 13 },
+            {"x" : 393, "y" : 86 },
+            {"x" : 390, "y" : 214},
+            {"x" : 248, "y" : 275}],
+        "connexions" : {"0" : {"connectaAmb" : [1,2,3,4]},
+            "1" : {"connectaAmb" : [2,4]},
+            "3" : {"connectaAmb" : [4]}}
+    };
+
+
 }
 /// Mètodes estàtics //////
 
@@ -92,8 +138,8 @@ $(document).ready(function(){
     jocDesenredar.canvas = document.getElementById("canvas");  // afegim a la variable global jocDesenredar
     jocDesenredar.ctx = jocDesenredar.canvas.getContext("2d");
 
-    // construim la xarxa de tres nusos
-    construirXarxa3Nusos();
+    // Nivell 1
+    construirXarxa();
 
     // Events per arrossegar els cercles
     $("#canvas").on({
@@ -123,7 +169,14 @@ $(document).ready(function(){
     setInterval(actualitzaFotograma, 1000/30);	// 30 fps
 });
 
-function construirXarxa3Nusos() {
+function construirXarxa() {
+    switch(currentLv){
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        default:
+    }
     jocDesenredar.cercles = [];
     for (var i=0; i<3; i++) {
         jocDesenredar.cercles.push(new Cercle(new Punt(Utilitats.nombreAleatoriEntre(10,jocDesenredar.canvas.width-10),
@@ -156,6 +209,8 @@ function actualitzaFotograma() {
 }
 
 
+
+
   ///////////////////
  /// Interface  ////
 ///////////////////
@@ -164,4 +219,18 @@ $("#start").click(function(e) {
         $("#menu").hide();
         $("#joc").show();
         user = $("#user").value;
+
+    var w= $(document).width();
+    var h= $(document).heigth();
+
+    codiImatge = '<canvas id="canvas" width="'+w+'" height="'+h+'"/>'; console.log(codiImatge);
+
+    $("#joc").append(codi);
+    
+    /*
+     <canvas id="canvas" width="1920" height="1080">
+     Em sap greu, el teu navegador no disposa de l'element HTML5 canvas.
+     </canvas>
+
+     */
 });
