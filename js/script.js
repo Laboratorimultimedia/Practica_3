@@ -59,8 +59,59 @@ Segment.contePunt=function(segment, punt){
 
 ////// Classe estàtica  //////
 function Utilitats(){
+
+
+    Utilitats.Nivell_1 = {
+        "currentLv" : 1,
+        "cercles" : [{"x" : 400, "y" : 156},
+            {"x" : 381, "y" : 241},
+            {"x" : 84 , "y" : 233},
+            {"x" : 88 , "y" : 73 }],
+        "connexions" : {"0" : {"connectaAmb" : [1,2]},
+            "1" : {"connectaAmb" : [3]},
+            "2" : {"connectaAmb" : [3]}}
+    };
+
+    Utilitats.Nivell_2={
+        "currentLv" : 2,
+        "cercles" : [{"x" : 401, "y" : 73 },
+            {"x" : 400, "y" : 240},
+            {"x" : 88 , "y" : 241},
+            {"x" : 84 , "y" : 72 }],
+        "connexions" : {"0" : {"connectaAmb" : [1,2,3]},
+            "1" : {"connectaAmb" : [2,3]},
+            "2" : {"connectaAmb" : [3]}}
+    };
+
+    Utilitats.Nivell_3={
+        "currentLv" : 3,
+        "cercles" : [{"x" : 92 , "y" : 85 },
+            {"x" : 253, "y" : 13 },
+            {"x" : 393, "y" : 86 },
+            {"x" : 390, "y" : 214},
+            {"x" : 248, "y" : 275}],
+        "connexions" : {"0" : {"connectaAmb" : [1,2,3,4]},
+            "1" : {"connectaAmb" : [2,3]},
+            "2" : {"connectaAmb" : [3]}}
+    };
+
+    Utilitats.Nivell_4={
+        "currentLv" : 4,
+        "cercles" : [{"x" : 92 , "y" : 85 },
+            {"x" : 253, "y" : 13 },
+            {"x" : 393, "y" : 86 },
+            {"x" : 390, "y" : 214},
+            {"x" : 248, "y" : 275}],
+        "connexions" : {"0" : {"connectaAmb" : [1,2,3,4]},
+            "1" : {"connectaAmb" : [2,4]},
+            "3" : {"connectaAmb" : [4]}}
+    };
 }
 /// Mètodes estàtics //////
+
+Utilitats.setLv=function setLv(Lv){localStorage.setItem('currentLv', Lv);}
+Utilitats.getLv=function getLv(Lv){return localStorage.getItem('currentLv');}
+
 Utilitats.nombreAleatoriEntre= function(a,b){
     return Math.floor(Math.random()*(b-a+a)) + a;
 }
@@ -74,44 +125,99 @@ var jocDesenredar = {
     linies: []
 };
 var temporitzador;  // animacions
-var començar=true; //true si ha començat la partida
+var començar=false; //true si ha començat la partida
 var segons=180; //el temps de partida des de que ha començat
 var seg1=0;
 var seg2=0;
 var min=0;
-var nivell=6;
+var currentLv=6;
+var customMode=false;
+var user;
+
+var nivells= [
+    {
+        "nivell" : 1,
+        "cercles" : [{"x" : 400, "y" : 156},
+            {"x" : 381, "y" : 241},
+            {"x" : 84 , "y" : 233},
+            {"x" : 88 , "y" : 73 }],
+        "connexions" : {"0" : {"connectaAmb" : [1,2]},
+            "1" : {"connectaAmb" : [3]},
+            "2" : {"connectaAmb" : [3]}}
+    },
+    {
+        "nivell" : 2,
+        "cercles" : [{"x" : 401, "y" : 73 },
+            {"x" : 400, "y" : 240},
+            {"x" : 88 , "y" : 241},
+            {"x" : 84 , "y" : 72 }],
+        "connexions" : {"0" : {"connectaAmb" : [1,2,3]},
+            "1" : {"connectaAmb" : [2,3]},
+            "2" : {"connectaAmb" : [3]}}
+    },
+    {
+        "nivell" : 3,
+        "cercles" : [{"x" : 92 , "y" : 85 },
+            {"x" : 253, "y" : 13 },
+            {"x" : 393, "y" : 86 },
+            {"x" : 390, "y" : 214},
+            {"x" : 248, "y" : 275}],
+        "connexions" : {"0" : {"connectaAmb" : [1,2,3,4]},
+            "1" : {"connectaAmb" : [2,3]},
+            "2" : {"connectaAmb" : [3]}}
+    },
+    {
+        "nivell" : 4,
+        "cercles" : [{"x" : 92 , "y" : 85 },
+            {"x" : 253, "y" : 13 },
+            {"x" : 393, "y" : 86 },
+            {"x" : 390, "y" : 214},
+            {"x" : 248, "y" : 275}],
+        "connexions" : {"0" : {"connectaAmb" : [1,2,3,4]},
+            "1" : {"connectaAmb" : [2,4]},
+            "3" : {"connectaAmb" : [4]}}
+    }
+
+];
 
 ///////////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function(){
+
+    $("#joc").hide();
+    $("#customMenu").hide();
     jocDesenredar.canvas = document.getElementById("canvas");  // afegim a la variable global jocDesenredar
     jocDesenredar.ctx = jocDesenredar.canvas.getContext("2d");
-
+    
     // construim la xarxa de tres nusos
-    construirXarxa3Nusos();
 
     // Events per arrossegar els cercles
     $("#canvas").on({
-        "mousedown":function(e) {
-            // posició del clic
-            var ratoli=new Punt(e.pageX-canvas.offsetLeft || 0, e.pageY-canvas.offsetTop  || 0);
-            // mirem si el clic ha estat interior a un cercle
-            for(var i=0;i<jocDesenredar.cercles.length && !jocDesenredar.cercleClicat;i++){
-                var cercle = jocDesenredar.cercles[i] ;
-                if(Punt.distanciaPuntPunt(ratoli,cercle.centre) < cercle.radi){
-                    jocDesenredar.cercleClicat = i;
+            "mousedown": function (e) {
+                // posició del clic
+                var ratoli = new Punt(e.pageX - canvas.offsetLeft || 0, e.pageY - canvas.offsetTop || 0);
+
+                // TODO - Crear cercle a la posició clicada
+                if(customMode) new Cercle(new Punt(e.pageX - canvas.offsetLeft || 0, e.pageY - canvas.offsetTop || 0),10);
+
+                // mirem si el clic ha estat interior a un cercle
+                for (var i = 0; i < jocDesenredar.cercles.length && !jocDesenredar.cercleClicat; i++) {
+                    var cercle = jocDesenredar.cercles[i];
+                    if (Punt.distanciaPuntPunt(ratoli, cercle.centre) < cercle.radi) {
+                        jocDesenredar.cercleClicat = i;
+                    }
                 }
+            },
+            "mousemove": function (e) {
+                if (jocDesenredar.cercleClicat != undefined) {
+                    var ratoli = new Punt(e.pageX - canvas.offsetLeft || 0, e.pageY - canvas.offsetTop || 0);
+                    jocDesenredar.cercles[jocDesenredar.cercleClicat].centre.x = ratoli.x;
+                    jocDesenredar.cercles[jocDesenredar.cercleClicat].centre.y = ratoli.y;
+                }
+            },
+            "mouseup": function (e) {
+                jocDesenredar.cercleClicat = undefined;
             }
-        },
-        "mousemove":function(e) {
-            if (jocDesenredar.cercleClicat != undefined){
-                var ratoli=new Punt(e.pageX-canvas.offsetLeft || 0, e.pageY-canvas.offsetTop  || 0);
-                jocDesenredar.cercles[jocDesenredar.cercleClicat].centre.x=ratoli.x;
-                jocDesenredar.cercles[jocDesenredar.cercleClicat].centre.y=ratoli.y;
-            }
-        },
-        "mouseup": function(e) {
-            jocDesenredar.cercleClicat = undefined;
-        }
+
     });
     // actualització del fotograma
     setInterval(actualitzaFotograma, 1000/30);	// 30 fps
@@ -122,7 +228,6 @@ $(document).ready(function(){
         if(començar) {
             if (segons == 0) {
                 //$("#fin").show(); //quan s'acaba el temps
-                alert("CACA");
                 començar=false;
             }
             else {
@@ -131,9 +236,9 @@ $(document).ready(function(){
             min=parseInt(segons/60);
             seg1=parseInt((segons%60)/10);
             seg2=parseInt((segons%60)-seg1*10);
-            document.getElementById('seg2').src ="imatges/rellotge/"+seg2+".jpg";
-            document.getElementById('seg1').src ="imatges/rellotge/"+seg1+".jpg";
-            document.getElementById('minut').src ="imatges/rellotge/"+min+".jpg";
+            document.getElementById('seg2').src ="data/rellotge/"+seg2+".jpg";
+            document.getElementById('seg1').src ="data/rellotge/"+seg1+".jpg";
+            document.getElementById('minut').src ="data/rellotge/"+min+".jpg";
         }
     }
 
@@ -141,11 +246,37 @@ $(document).ready(function(){
 
 
 
-function construirXarxa3Nusos() {
+function construirXarxa() {
+
     jocDesenredar.cercles = [];
-    for (var i=0; i<nivell+3; i++) {
-        jocDesenredar.cercles.push(new Cercle(new Punt(Utilitats.nombreAleatoriEntre(10,jocDesenredar.canvas.width-10),
-            Utilitats.nombreAleatoriEntre(10,jocDesenredar.canvas.height-10)), 10));
+
+    switch(currentLv){
+        case 1:{
+            for (var i=0; i<3; i++) {
+                jocDesenredar.cercles.push(new Cercle(new Punt(nivells[currentLv-1].cercles[i].x ,nivells[currentLv-1].cercles[i].y ), 10));
+            }
+        }break;
+        case 2:{
+            for (var i=0; i<3; i++) {
+                jocDesenredar.cercles.push(new Cercle(new Punt(nivells[currentLv-1].cercles[i].x ,nivells[currentLv-1].cercles[i].y ), 10));
+            }
+        }break;
+        case 3:{
+            for (var i=0; i<4; i++) {
+                jocDesenredar.cercles.push(new Cercle(new Punt(nivells[currentLv-1].cercles[i].x ,nivells[currentLv-1].cercles[i].y ), 10));
+            }
+        }break;
+        case 4:{
+            for (var i=0; i<4; i++) {
+                jocDesenredar.cercles.push(new Cercle(new Punt(nivells[currentLv-1].cercles[i].x ,nivells[currentLv-1].cercles[i].y ), 10));
+            }
+        }break;
+        default:{
+            for (var i=0; i<currentLv+3; i++) {
+                jocDesenredar.cercles.push(new Cercle(new Punt(Utilitats.nombreAleatoriEntre(10,jocDesenredar.canvas.width-10),
+                    Utilitats.nombreAleatoriEntre(10,jocDesenredar.canvas.height-10)), 10));
+            }
+        }
     }
 
     connectarCercles();
@@ -155,12 +286,12 @@ function connectarCercles(){
     jocDesenredar.linies.length = 0;  // buidem l'array de segments
     var plus=1;
     for (var i=0; i<2;i++){
-        for(var j=plus; j<nivell+3;j++){
+        for(var j=plus; j<currentLv+3;j++){
             jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[j].centre, jocDesenredar.cercles[i].centre));
         }
         plus++;
     }
-    for(var i=2; i<nivell+2;i++){
+    for(var i=2; i<currentLv+2;i++){
         jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[i].centre, jocDesenredar.cercles[i+1].centre));
     }
 }
@@ -182,3 +313,33 @@ function actualitzaFotograma() {
 
 
 //////////////////////////////////////////////////////////////////////////////////////
+
+  ///////////////////
+ /// Interface  ////
+///////////////////
+
+$("#start").click(function(e) {
+    user = $("#user").value;
+    if(user==null) alert("user= "+ user); //alert("Has d'indicar un nom d'usuari");
+    else {
+
+    }
+    $("#menu").hide();
+    $("#joc").show();
+    començar = true;
+    construirXarxa();
+});
+
+$("#custom").click(function(e) {
+    $("#menu").hide();
+    $("#joc").show();
+    $("#customMenu").show();
+    customMode=true;
+    user = $("#user").value;
+});
+$("#startCustom").click(function(e) {
+    $("#customMenu").hide();
+    customMode=false;
+    començar=true;
+    user = $("#user").value;
+});
