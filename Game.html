@@ -6,14 +6,33 @@
     <style>
         body{
             text-align:center;
+            background-image: url("./data/menubg.jpg");
+            background-color: #000000;
         }
         #joc{
-            width: 800px;
+            width: 100%;
             margin: 0 auto;
+            float:left;
+        }
+        #wrap{
+            width:100%;
+        }
+        #menu{
+            color:#FFFFFF;
+
+            width:100%;
+            float:left;
         }
         #canvas{
             position:relative;
-            background: #333;
+            border-style: outset;
+            border-color: #FFFFFF;
+            background: #091851;
+            background-image: url("./data/menubg3.png");
+        }
+        #head{
+            font-family: "Courier New", Courier, monospace;
+            position:relative;
         }
     </style>
 </head>
@@ -23,6 +42,19 @@
     <canvas id="canvas" width="800" height="400">
         Em sap greu, el teu navegador no disposa de l'element HTML5 canvas.
     </canvas>
+</div>
+<div id="wrap">
+<div id="menu">
+    <div id="head">
+    <h1>Desenredar</h1>
+    <h3>by David Junquero, Jan Jimenez & Joan Figueres</h3>
+        </div>
+    <p>
+        <h4> <label for="user">Usuari: </label> <input type="text" id="user" /> </h4><br /><br>
+        <p id="empty"></p>
+        <button id="start">Start</button>
+    </p>
+</div>
 </div>
 <script src="js/jquery-1.12.3.min.js"></script>
 <script src="js/script.js"></script>
