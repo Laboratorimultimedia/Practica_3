@@ -6,54 +6,32 @@
     <style>
         body{
             text-align:center;
-            background-image: url("./data/menubg2.png");
-            background-color: #000000;
         }
         #joc{
-            width: 100%;
+            width: 800px;
             margin: 0 auto;
-            float:left;
-        }
-        #wrap{
-            width:100%;
-            background-image: url("./data/menubg.png");
-        }
-        #menu{
-            color:#FFFFFF;
-            width:100%;
-            float:left;
         }
         #canvas{
             position:relative;
-            border-style: outset;
-            border-color: #FFFFFF;
-            background-image: url("./data/menubg4.png");
+            background: #333;
         }
-        #head{
-            font-family: "Courier New", Courier, monospace;
-            position:relative;
+        #rellotge{
+            text-align:center;
         }
     </style>
 </head>
 
-<body>
+<body bgcolor="black">
 <div id="joc">
-    <canvas id="canvas" width="1920" height="1080">
+    <canvas id="canvas" width="800" height="400">
         Em sap greu, el teu navegador no disposa de l'element HTML5 canvas.
     </canvas>
 </div>
-<div id="wrap">
-<div id="menu">
-    <div id="head">
-    <h1>Desenredar</h1>
-    <h3>by David Junquero, Jan Jimenez & Joan Figueres</h3>
-        </div>
-
-        <h4> <label for="user">Usuari: </label> <input type="text" id="user" /> </h4><br /><br>
-        <p id="empty"></p>
-        <button id="start">Start</button>
-
-</div>
+<div id="rellotge">
+    <img id="minut" src="imatges/rellotge/3.jpg">
+    <img src="imatges/rellotge/dos_puntos.png" width="45" height="60">
+    <img id="seg1" src="imatges/rellotge/0.jpg">
+    <img id="seg2" src="imatges/rellotge/0.jpg">
 </div>
 <script src="js/jquery-1.12.3.min.js"></script>
 <script src="js/script.js"></script>

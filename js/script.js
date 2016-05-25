@@ -2,9 +2,6 @@
  * Created by Black Phoenix on 13/05/2016.
  */
 
-// Inteface variables
-var currentLv=1;
-var user;
 
 //////////////////////////// classe Punt ///////////////////////////
 function Punt(x,y){
@@ -24,7 +21,7 @@ Punt.distanciaPuntPunt=function(p1,p2){
 function Cercle(centre,radi,color){
     this.centre = centre;  // és un Punt
     this.radi = radi;
-    this.color = color || "rgba(255, 255, 255, .8)";
+    this.color = color || "rgba(200, 200, 100, .9)";
 }
 Cercle.prototype.dibuixar = function(ctx){
     ctx.fillStyle = this.color;
@@ -40,7 +37,7 @@ function Segment(p1, p2, gruix, color) {
     this.p1 = p1;  // és un Punt
     this.p2 = p2;
     this.gruix = gruix;
-    this.color = color || "#AADDFF";
+    this.color = color || "#cfc";
 }
 ////// Mètodes públics
 Segment.prototype.dibuixar = function(ctx) {
@@ -54,8 +51,6 @@ Segment.prototype.dibuixar = function(ctx) {
 ////// Mètodes estàtics
 Segment.esTallen=function (segment1, segment2){
 
-
-
 }
 
 Segment.contePunt=function(segment, punt){
@@ -64,60 +59,8 @@ Segment.contePunt=function(segment, punt){
 
 ////// Classe estàtica  //////
 function Utilitats(){
-
-    var Nivell_1 = {
-        "nivell" : 1,
-        "cercles" : [{"x" : 400, "y" : 156},
-            {"x" : 381, "y" : 241},
-            {"x" : 84 , "y" : 233},
-            {"x" : 88 , "y" : 73 }],
-        "connexions" : {"0" : {"connectaAmb" : [1,2]},
-            "1" : {"connectaAmb" : [3]},
-            "2" : {"connectaAmb" : [3]}}
-    };
-
-    var Nivell_2={
-        "nivell" : 2,
-        "cercles" : [{"x" : 401, "y" : 73 },
-            {"x" : 400, "y" : 240},
-            {"x" : 88 , "y" : 241},
-            {"x" : 84 , "y" : 72 }],
-        "connexions" : {"0" : {"connectaAmb" : [1,2,3]},
-            "1" : {"connectaAmb" : [2,3]},
-            "2" : {"connectaAmb" : [3]}}
-    };
-
-    var Nivell_3={
-        "nivell" : 3,
-        "cercles" : [{"x" : 92 , "y" : 85 },
-            {"x" : 253, "y" : 13 },
-            {"x" : 393, "y" : 86 },
-            {"x" : 390, "y" : 214},
-            {"x" : 248, "y" : 275}],
-        "connexions" : {"0" : {"connectaAmb" : [1,2,3,4]},
-            "1" : {"connectaAmb" : [2,3]},
-            "2" : {"connectaAmb" : [3]}}
-    };
-
-    var Nivell_4={
-        "nivell" : 4,
-        "cercles" : [{"x" : 92 , "y" : 85 },
-            {"x" : 253, "y" : 13 },
-            {"x" : 393, "y" : 86 },
-            {"x" : 390, "y" : 214},
-            {"x" : 248, "y" : 275}],
-        "connexions" : {"0" : {"connectaAmb" : [1,2,3,4]},
-            "1" : {"connectaAmb" : [2,4]},
-            "3" : {"connectaAmb" : [4]}}
-    };
-
-
 }
 /// Mètodes estàtics //////
-
-Utilitats.setLv=function setLv(Lv){localStorage.setItem('nivell', Lv);}
-Utilitats.getLv=function getLv(Lv){return localStorage.getItem('nivell');}
-
 Utilitats.nombreAleatoriEntre= function(a,b){
     return Math.floor(Math.random()*(b-a+a)) + a;
 }
@@ -130,16 +73,21 @@ var jocDesenredar = {
     liniaPrima: 1,
     linies: []
 };
-
+var temporitzador;  // animacions
+var començar=true; //true si ha començat la partida
+var segons=180; //el temps de partida des de que ha començat
+var seg1=0;
+var seg2=0;
+var min=0;
+var nivell=6;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function(){
-    $("#joc").hide();
     jocDesenredar.canvas = document.getElementById("canvas");  // afegim a la variable global jocDesenredar
     jocDesenredar.ctx = jocDesenredar.canvas.getContext("2d");
 
-    // Nivell 1
-    construirXarxa();
+    // construim la xarxa de tres nusos
+    construirXarxa3Nusos();
 
     // Events per arrossegar els cercles
     $("#canvas").on({
@@ -167,18 +115,35 @@ $(document).ready(function(){
     });
     // actualització del fotograma
     setInterval(actualitzaFotograma, 1000/30);	// 30 fps
+    setInterval(rellotge,1000); //cada 1 segon executa la funcio rellotge
+    
+
+    function rellotge() { //cronometre o temporitzador
+        if(començar) {
+            if (segons == 0) {
+                //$("#fin").show(); //quan s'acaba el temps
+                alert("CACA");
+                començar=false;
+            }
+            else {
+                segons--;
+            }
+            min=parseInt(segons/60);
+            seg1=parseInt((segons%60)/10);
+            seg2=parseInt((segons%60)-seg1*10);
+            document.getElementById('seg2').src ="imatges/rellotge/"+seg2+".jpg";
+            document.getElementById('seg1').src ="imatges/rellotge/"+seg1+".jpg";
+            document.getElementById('minut').src ="imatges/rellotge/"+min+".jpg";
+        }
+    }
+
 });
 
-function construirXarxa() {
-    switch(currentLv){
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        default:
-    }
+
+
+function construirXarxa3Nusos() {
     jocDesenredar.cercles = [];
-    for (var i=0; i<3; i++) {
+    for (var i=0; i<nivell+3; i++) {
         jocDesenredar.cercles.push(new Cercle(new Punt(Utilitats.nombreAleatoriEntre(10,jocDesenredar.canvas.width-10),
             Utilitats.nombreAleatoriEntre(10,jocDesenredar.canvas.height-10)), 10));
     }
@@ -188,9 +153,16 @@ function construirXarxa() {
 
 function connectarCercles(){
     jocDesenredar.linies.length = 0;  // buidem l'array de segments
-    jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[1].centre));
-    jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[1].centre, jocDesenredar.cercles[2].centre));
-    jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[2].centre, jocDesenredar.cercles[0].centre));
+    var plus=1;
+    for (var i=0; i<2;i++){
+        for(var j=plus; j<nivell+3;j++){
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[j].centre, jocDesenredar.cercles[i].centre));
+        }
+        plus++;
+    }
+    for(var i=2; i<nivell+2;i++){
+        jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[i].centre, jocDesenredar.cercles[i+1].centre));
+    }
 }
 
 function actualitzaFotograma() {
@@ -209,28 +181,4 @@ function actualitzaFotograma() {
 }
 
 
-
-
-  ///////////////////
- /// Interface  ////
-///////////////////
-
-$("#start").click(function(e) {
-        $("#menu").hide();
-        $("#joc").show();
-        user = $("#user").value;
-
-    var w= $(document).width();
-    var h= $(document).heigth();
-
-    codiImatge = '<canvas id="canvas" width="'+w+'" height="'+h+'"/>'; console.log(codiImatge);
-
-    $("#joc").append(codi);
-    
-    /*
-     <canvas id="canvas" width="1920" height="1080">
-     Em sap greu, el teu navegador no disposa de l'element HTML5 canvas.
-     </canvas>
-
-     */
-});
+//////////////////////////////////////////////////////////////////////////////////////
