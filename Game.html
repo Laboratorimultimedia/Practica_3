@@ -37,16 +37,31 @@
             font-family: "Courier New", Courier, monospace;
             position:relative;
         }
+        #felicitacio{
+            font-family: "Comic Sans MS", cursive;
+            font-size: 2em;
+            text-align:center; color: #00F;
+            position: absolute; z-index:100;
+            width:400px; height: 200px;
+            top:200px; left: 550px;
+            opacity: 0.5;
+            background-color:#CF3;
+            border-radius: 30px;
+            padding-top: 50px;
+        }
     </style>
 </head>
 
 <body bgcolor="black">
 <div id="joc">
+    <div id="felicitacio" style="display:none;">
+        <h1> TEMPS</h1>
+    </div>
     <canvas id="canvas" width="1280" height="720">
         Em sap greu, el teu navegador no disposa de l'element HTML5 canvas.
     </canvas>
     <div id="rellotge">
-        <img id="minut" src="data/rellotge/3.jpg">
+        <img id="minut" src="data/rellotge/5.jpg">
         <img src="data/rellotge/dos_puntos.png" width="45" height="60">
         <img id="seg1" src="data/rellotge/0.jpg">
         <img id="seg2" src="data/rellotge/0.jpg">
@@ -55,7 +70,7 @@
 
 <div id="wrap">
     <div id="customMenu">
-        <p>Clica per situar un punt. Clica sobre un punt per unir-lo amb un altre. Prem "Solucionar" per resoldre'l</p>
+        <p>Clica per situar un punt. Prem "Solucionar" per crear la xarxa i resoldre-la</p>
         <button id="startCustom">Solucionar</button>
     </div>
     <div id="menu">
@@ -64,7 +79,7 @@
             <h3>by David Junquero, Jan Jimenez & Joan Figueres</h3>
         </div>
 
-        <h4> <label for="user">Usuari: </label> <input type="text" id="user" /> </h4><br /><br>
+        <h4> <label for="userInput">Usuari: </label> <input type="text" id="userInput" /> </h4><br /><br>
         <p id="empty"></p>
         <button id="start">Start</button>
         <button id="custom">Personalitzar</button>

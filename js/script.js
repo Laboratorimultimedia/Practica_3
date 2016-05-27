@@ -72,22 +72,13 @@ function Utilitats(){
 }
 /// Mètodes estàtics //////
 
-/*
 
-Utilitats.setLv=function newUserData(user){
-    if(localStorage.getItem(user)==null){
-        var userData=[0]=1;
-        localStorage.setItem(user, userData);
-}
-}
-Utilitats.setLv=function setMaxLv(user,MaxLv){
-    var userData=localStorage.getItem(user);
-    userData[0]=MaxLv;
-    localStorage.setItem(user, userData);
-}
-Utilitats.getLv=function getMaxLv(user){return localStorage.getItem(user)[0];}
 
-*/
+Utilitats.setLv=function setLv(user){
+    localStorage.setItem(user, currentLv);
+}
+Utilitats.getLv=function getLv(user){return localStorage.getItem(user);}
+
 
 Utilitats.nombreAleatoriEntre= function(a,b){
     return Math.floor(Math.random()*(b-a+a)) + a;
@@ -103,7 +94,7 @@ var jocDesenredar = {
 };
 var temporitzador;  // animacions
 var començar=false; //true si ha començat la partida
-var segons=180; //el temps de partida des de que ha començat
+var segons=300; //el temps de partida des de que ha començat
 var seg1=0;
 var seg2=0;
 var min=0;
@@ -112,6 +103,8 @@ var customMode=false;
 var customLv=false;
 var user;
 var colision=true;
+var recordAnterior=0;
+var record=false;
 
 var nivells= [
     {
@@ -209,6 +202,7 @@ $(document).ready(function(){
             if (segons == 0) {
                 //$("#fin").show(); //quan s'acaba el temps
                 començar=false;
+                alert("Rècord anterior: " + recordAnterior +"\nNivells superats: "+(currentLv-1));
             }
             else {
                 segons--;
@@ -322,17 +316,18 @@ function actualitzaFotograma() {
         jocDesenredar.cercles[i].dibuixar(ctx);
     }
 if(segons==0){
-    alert("Temps esgotat");
-    segons=180;
-    jocDesenredar.linies.length = 0;
-    jocDesenredar.cercles.length = 0;
-    començar=false;
-    currentLv=1;
-    $("#menu").show();
-    $("#joc").hide();
+    $("#felicitacio").show();
+    setTimeout(function (){
+        segons=300;
+        jocDesenredar.linies.length = 0;
+        jocDesenredar.cercles.length = 0;
+        començar=false;
+        currentLv=1;
+        $("#felicitacio").hide();
+        $("#menu").show();
+        $("#joc").hide();
+    }, 3000);
 }
-
-
 }
 
 function checkColision(){
@@ -346,15 +341,13 @@ function checkColision(){
 }
 
 function nextLv(){
-    // isMaxLv();
+    isMaxLv();
     if(!customLv) {
         currentLv++;
         construirXarxa();
-        alert("Nivell " + (currentLv - 1) + " completat");
     }
     else{
-        alert("Nivell personalitzat completat");
-        segons=180;
+        segons=300;
         jocDesenredar.linies.length = 0;
         jocDesenredar.cercles.length = 0;
         customLv=false;
@@ -366,10 +359,17 @@ function nextLv(){
 }
 
 function isMaxLv(){
-    if(getMaxLv(user)<currenLv){
-        alert("Nou rècord establert");
-        setMaxLv(user,currentLv);
-    }
+
+    if(Utilitats.getLv(user)==null) Utilitats.setLv(user);
+    else if(recordAnterior==0){recordAnterior=Utilitats.getLv(user);}
+
+        if(recordAnterior<currentLv) {
+            if(!record){
+                alert("Nou rècord establert");
+                record=true;
+            }
+            Utilitats.setLv(user);
+        }
 }
 function gruixArestes() {
     for(var k=0;k<jocDesenredar.linies.length;k++){
@@ -396,7 +396,6 @@ $("#start").click(function(e) {
     user = $("#user").val();
     if(user="") alert("Has d'indicar un nom d'usuari");
     else {
-
     }
     $("#menu").hide();
     $("#joc").show();
@@ -405,6 +404,7 @@ $("#start").click(function(e) {
 });
 
 $("#custom").click(function(e) {
+    segons=300;
     $("#menu").hide();
     $("#joc").show();
     $("#customMenu").show();
@@ -413,6 +413,7 @@ $("#custom").click(function(e) {
 });
 $("#startCustom").click(function(e) {
     $("#customMenu").hide();
+    segons=300;
     customMode=false;
     customLv=true;
     començar=true;
