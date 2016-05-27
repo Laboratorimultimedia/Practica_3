@@ -321,7 +321,16 @@ function actualitzaFotograma() {
     for(var i=0;i<jocDesenredar.cercles.length;i++) {
         jocDesenredar.cercles[i].dibuixar(ctx);
     }
-
+if(segons==0){
+    alert("Temps esgotat");
+    segons=180;
+    jocDesenredar.linies.length = 0;
+    jocDesenredar.cercles.length = 0;
+    començar=false;
+    currentLv=1;
+    $("#menu").show();
+    $("#joc").hide();
+}
 
 
 }
