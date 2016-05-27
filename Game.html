@@ -37,11 +37,26 @@
             font-family: "Courier New", Courier, monospace;
             position:relative;
         }
+        #felicitacio{
+            font-family: "Comic Sans MS", cursive;
+            font-size: 2em;
+            text-align:center; color: #00F;
+            position: absolute; z-index:100;
+            width:400px; height: 200px;
+            top:200px; left: 550px;
+            opacity: 0.5;
+            background-color:#CF3;
+            border-radius: 30px;
+            padding-top: 50px;
+        }
     </style>
 </head>
 
 <body bgcolor="black">
 <div id="joc">
+    <div id="felicitacio" style="display:none;">
+        <h1> TEMPS</h1>
+    </div>
     <canvas id="canvas" width="1280" height="720">
         Em sap greu, el teu navegador no disposa de l'element HTML5 canvas.
     </canvas>
