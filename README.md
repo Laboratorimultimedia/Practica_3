@@ -15,9 +15,6 @@
 ## TODO
 
     - Guardar estadísticas
-- Niveles 1 -> 4 predefinidos 
-
-
 
 ### Extra
 
