@@ -7,17 +7,18 @@
 * Interfaz
 * Reloj
 * Asegurarse de que los auto-generados tienen solución
+* Funciones de colisión
+* Transición de niveles
+* Niveles 1 -> 4 predefinidos 
+* Creación personalizada de niveles
 
 ## TODO
 
-- Funciones de colisión
-- Transición de niveles
     - Guardar estadísticas
 - Niveles 1 -> 4 predefinidos 
-- No coje el nombre de usuario correctamente
 
 
 
 ### Extra
-* Creación personalizada de niveles
+
 * Append canvas con las dimensiones del documento (maximizarlo)
