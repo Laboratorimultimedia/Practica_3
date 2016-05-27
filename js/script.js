@@ -69,51 +69,6 @@ Segment.check=function(p1,p2,p3){
 function Utilitats(){
 
 
-    Utilitats.Nivell_1 = {
-        "currentLv" : 1,
-        "cercles" : [{"x" : 400, "y" : 156},
-            {"x" : 381, "y" : 241},
-            {"x" : 84 , "y" : 233},
-            {"x" : 88 , "y" : 73 }],
-        "connexions" : {"0" : {"connectaAmb" : [1,2]},
-            "1" : {"connectaAmb" : [3]},
-            "2" : {"connectaAmb" : [3]}}
-    };
-
-    Utilitats.Nivell_2={
-        "currentLv" : 2,
-        "cercles" : [{"x" : 401, "y" : 73 },
-            {"x" : 400, "y" : 240},
-            {"x" : 88 , "y" : 241},
-            {"x" : 84 , "y" : 72 }],
-        "connexions" : {"0" : {"connectaAmb" : [1,2,3]},
-            "1" : {"connectaAmb" : [2,3]},
-            "2" : {"connectaAmb" : [3]}}
-    };
-
-    Utilitats.Nivell_3={
-        "currentLv" : 3,
-        "cercles" : [{"x" : 92 , "y" : 85 },
-            {"x" : 253, "y" : 13 },
-            {"x" : 393, "y" : 86 },
-            {"x" : 390, "y" : 214},
-            {"x" : 248, "y" : 275}],
-        "connexions" : {"0" : {"connectaAmb" : [1,2,3,4]},
-            "1" : {"connectaAmb" : [2,3]},
-            "2" : {"connectaAmb" : [3]}}
-    };
-
-    Utilitats.Nivell_4={
-        "currentLv" : 4,
-        "cercles" : [{"x" : 92 , "y" : 85 },
-            {"x" : 253, "y" : 13 },
-            {"x" : 393, "y" : 86 },
-            {"x" : 390, "y" : 214},
-            {"x" : 248, "y" : 275}],
-        "connexions" : {"0" : {"connectaAmb" : [1,2,3,4]},
-            "1" : {"connectaAmb" : [2,4]},
-            "3" : {"connectaAmb" : [4]}}
-    };
 }
 /// Mètodes estàtics //////
 
@@ -138,7 +93,7 @@ var segons=180; //el temps de partida des de que ha començat
 var seg1=0;
 var seg2=0;
 var min=0;
-var currentLv=6;
+var currentLv=1;
 var customMode=false;
 var user;
 
@@ -260,34 +215,36 @@ function construirXarxa() {
 
     switch(currentLv){
         case 1:{
-            for (var i=0; i<3; i++) {
-                jocDesenredar.cercles.push(new Cercle(new Punt(nivells[currentLv-1].cercles[i].x ,nivells[currentLv-1].cercles[i].y ), 10));
+            for (var i=0; i<4; i++) {
+                jocDesenredar.cercles.push(new Cercle(new Punt(nivells[0].cercles[i].x ,nivells[0].cercles[i].y ), 10));
+                
             }
         }break;
         case 2:{
-            for (var i=0; i<3; i++) {
-                jocDesenredar.cercles.push(new Cercle(new Punt(nivells[currentLv-1].cercles[i].x ,nivells[currentLv-1].cercles[i].y ), 10));
+            for (var i=0; i<4; i++) {
+                jocDesenredar.cercles.push(new Cercle(new Punt(nivells[1].cercles[i].x ,nivells[1].cercles[i].y ), 10));
             }
         }break;
         case 3:{
-            for (var i=0; i<4; i++) {
-                jocDesenredar.cercles.push(new Cercle(new Punt(nivells[currentLv-1].cercles[i].x ,nivells[currentLv-1].cercles[i].y ), 10));
+            for (var i=0; i<5; i++) {
+                jocDesenredar.cercles.push(new Cercle(new Punt(nivells[2].cercles[i].x ,nivells[2].cercles[i].y ), 10));
             }
         }break;
         case 4:{
-            for (var i=0; i<4; i++) {
-                jocDesenredar.cercles.push(new Cercle(new Punt(nivells[currentLv-1].cercles[i].x ,nivells[currentLv-1].cercles[i].y ), 10));
+            for (var i=0; i<5; i++) {
+                jocDesenredar.cercles.push(new Cercle(new Punt(nivells[3].cercles[i].x ,nivells[3].cercles[i].y ), 10));
             }
         }break;
         default:{
             for (var i=0; i<currentLv+3; i++) {
                 jocDesenredar.cercles.push(new Cercle(new Punt(Utilitats.nombreAleatoriEntre(10,jocDesenredar.canvas.width-10),
                     Utilitats.nombreAleatoriEntre(10,jocDesenredar.canvas.height-10)), 10));
+                    connectarCercles();
             }
         }
     }
 
-    connectarCercles();
+
 }
 
 function connectarCercles(){
