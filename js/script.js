@@ -72,8 +72,22 @@ function Utilitats(){
 }
 /// Mètodes estàtics //////
 
-Utilitats.setLv=function setLv(Lv){localStorage.setItem('currentLv', Lv);}
-Utilitats.getLv=function getLv(Lv){return localStorage.getItem('currentLv');}
+/*
+
+Utilitats.setLv=function newUserData(user){
+    if(localStorage.getItem(user)==null){
+        var userData=[0]=1;
+        localStorage.setItem(user, userData);
+}
+}
+Utilitats.setLv=function setMaxLv(user,MaxLv){
+    var userData=localStorage.getItem(user);
+    userData[0]=MaxLv;
+    localStorage.setItem(user, userData);
+}
+Utilitats.getLv=function getMaxLv(user){return localStorage.getItem(user)[0];}
+
+*/
 
 Utilitats.nombreAleatoriEntre= function(a,b){
     return Math.floor(Math.random()*(b-a+a)) + a;
@@ -95,7 +109,9 @@ var seg2=0;
 var min=0;
 var currentLv=1;
 var customMode=false;
+var customLv=false;
 var user;
+var colision=true;
 
 var nivells= [
     {
@@ -160,7 +176,7 @@ $(document).ready(function(){
                 var ratoli = new Punt(e.pageX - canvas.offsetLeft || 0, e.pageY - canvas.offsetTop || 0);
 
                 // TODO - Crear cercle a la posició clicada
-                if(customMode) new Cercle(new Punt(e.pageX - canvas.offsetLeft || 0, e.pageY - canvas.offsetTop || 0),10);
+                if(customMode) jocDesenredar.cercles.push(new Cercle(new Punt(e.pageX - canvas.offsetLeft || 0, e.pageY - canvas.offsetTop || 0),10));
 
                 // mirem si el clic ha estat interior a un cercle
                 for (var i = 0; i < jocDesenredar.cercles.length && !jocDesenredar.cercleClicat; i++) {
@@ -179,6 +195,7 @@ $(document).ready(function(){
             },
             "mouseup": function (e) {
                 jocDesenredar.cercleClicat = undefined;
+                if(començar && !checkColision()) nextLv();
             }
 
     });
@@ -214,33 +231,62 @@ function construirXarxa() {
     jocDesenredar.cercles = [];
 
     switch(currentLv){
+        
         case 1:{
+            jocDesenredar.linies.length = 0;
             for (var i=0; i<4; i++) {
                 jocDesenredar.cercles.push(new Cercle(new Punt(nivells[0].cercles[i].x ,nivells[0].cercles[i].y ), 10));
-                
+
             }
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[1].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[1].centre, jocDesenredar.cercles[3].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[2].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[2].centre, jocDesenredar.cercles[3].centre));
         }break;
         case 2:{
+            jocDesenredar.linies.length = 0;
             for (var i=0; i<4; i++) {
                 jocDesenredar.cercles.push(new Cercle(new Punt(nivells[1].cercles[i].x ,nivells[1].cercles[i].y ), 10));
             }
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[1].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[1].centre, jocDesenredar.cercles[2].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[2].centre, jocDesenredar.cercles[3].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[3].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[2].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[1].centre, jocDesenredar.cercles[3].centre));
         }break;
         case 3:{
+            jocDesenredar.linies.length = 0;
             for (var i=0; i<5; i++) {
                 jocDesenredar.cercles.push(new Cercle(new Punt(nivells[2].cercles[i].x ,nivells[2].cercles[i].y ), 10));
             }
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[1].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[1].centre, jocDesenredar.cercles[2].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[2].centre, jocDesenredar.cercles[3].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[3].centre, jocDesenredar.cercles[0].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[4].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[2].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[1].centre, jocDesenredar.cercles[3].centre));
         }break;
         case 4:{
+            jocDesenredar.linies.length = 0;
             for (var i=0; i<5; i++) {
                 jocDesenredar.cercles.push(new Cercle(new Punt(nivells[3].cercles[i].x ,nivells[3].cercles[i].y ), 10));
             }
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[1].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[1].centre, jocDesenredar.cercles[2].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[3].centre, jocDesenredar.cercles[4].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[4].centre, jocDesenredar.cercles[0].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[4].centre, jocDesenredar.cercles[1].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[2].centre, jocDesenredar.cercles[0].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[3].centre));
         }break;
         default:{
             for (var i=0; i<currentLv+3; i++) {
                 jocDesenredar.cercles.push(new Cercle(new Punt(Utilitats.nombreAleatoriEntre(10,jocDesenredar.canvas.width-10),
                     Utilitats.nombreAleatoriEntre(10,jocDesenredar.canvas.height-10)), 10));
-                    connectarCercles();
             }
+            connectarCercles();
         }
     }
 
@@ -251,12 +297,12 @@ function connectarCercles(){
     jocDesenredar.linies.length = 0;  // buidem l'array de segments
     var plus=1;
     for (var i=0; i<2;i++){
-        for(var j=plus; j<currentLv+3;j++){
+        for(var j=plus; j<jocDesenredar.cercles.length;j++){
             jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[j].centre, jocDesenredar.cercles[i].centre));
         }
         plus++;
     }
-    for(var i=2; i<currentLv+2;i++){
+    for(var i=2; i<jocDesenredar.cercles.length;i++){
         jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[i].centre, jocDesenredar.cercles[i+1].centre));
     }
 }
@@ -275,8 +321,47 @@ function actualitzaFotograma() {
     for(var i=0;i<jocDesenredar.cercles.length;i++) {
         jocDesenredar.cercles[i].dibuixar(ctx);
     }
+
+
+
 }
 
+function checkColision(){
+
+    for(var i=0;i<jocDesenredar.linies.length;i++){
+        if(jocDesenredar.linies[i].gruix > 3){
+            return true;
+        }
+    }
+    return false;
+}
+
+function nextLv(){
+    // isMaxLv();
+    if(!customLv) {
+        currentLv++;
+        construirXarxa();
+        alert("Nivell " + (currentLv - 1) + " completat");
+    }
+    else{
+        alert("Nivell personalitzat completat");
+        segons=180;
+        jocDesenredar.linies.length = 0;
+        jocDesenredar.cercles.length = 0;
+        customLv=false;
+        customMode=true;
+        començar=false;
+        $("#customMenu").show();
+
+    }
+}
+
+function isMaxLv(){
+    if(getMaxLv(user)<currenLv){
+        alert("Nou rècord establert");
+        setMaxLv(user,currentLv);
+    }
+}
 function gruixArestes() {
     for(var k=0;k<jocDesenredar.linies.length;k++){
         jocDesenredar.linies[k].gruix = 2;
@@ -299,8 +384,8 @@ function gruixArestes() {
 ///////////////////
 
 $("#start").click(function(e) {
-    user = $("#user").value;
-    if(user==null) alert("user= "+ user); //alert("Has d'indicar un nom d'usuari");
+    user = $("#user").val();
+    if(user="") alert("Has d'indicar un nom d'usuari");
     else {
 
     }
@@ -315,11 +400,13 @@ $("#custom").click(function(e) {
     $("#joc").show();
     $("#customMenu").show();
     customMode=true;
-    user = $("#user").value;
+    user = $("#user").val();
 });
 $("#startCustom").click(function(e) {
     $("#customMenu").hide();
     customMode=false;
+    customLv=true;
     començar=true;
-    user = $("#user").value;
+    user = $("#user").val();
+    connectarCercles();
 });
