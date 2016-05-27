@@ -49,13 +49,21 @@ Segment.prototype.dibuixar = function(ctx) {
     ctx.stroke();
 }
 ////// Mètodes estàtics
-Segment.esTallen=function (segment1, segment2){
-
-}
-
-Segment.contePunt=function(segment, punt){
-
-}
+Segment.esTallen=function (segment1, segment2) {
+    var p1=segment1.p1;
+    var p2=segment1.p2;
+    var p3=segment2.p1;
+    var p4=segment2.p2;
+    if(p1==p3||p1==p4||p2==p3||p2==p4){
+        return false;
+    }
+    else {
+        return Segment.check(p1, p2, p3) != Segment.check(p1, p2, p4) && Segment.check(p3, p4, p1) != Segment.check(p3, p4, p2);
+    }
+};
+Segment.check=function(p1,p2,p3){
+    return (p3.y-p1.y)*(p2.x-p1.x) > (p2.y-p1.y)*(p3.x-p1.x);
+};
 
 ////// Classe estàtica  //////
 function Utilitats(){
@@ -302,6 +310,7 @@ function actualitzaFotograma() {
     // esborrem el canvas
     ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
     // dibuixem totes les línies
+    gruixArestes();
     for(var i=0;i<jocDesenredar.linies.length;i++) {
         jocDesenredar.linies[i].dibuixar(ctx);
     }
@@ -311,6 +320,20 @@ function actualitzaFotograma() {
     }
 }
 
+function gruixArestes() {
+    for(var k=0;k<jocDesenredar.linies.length;k++){
+        jocDesenredar.linies[k].gruix = 2;
+    }
+    for(var i=0;i<jocDesenredar.linies.length;i++) {
+        for(var j = i+1; j<jocDesenredar.linies.length; j++) {
+            if (Segment.esTallen(jocDesenredar.linies[i], jocDesenredar.linies[j])) {
+                //console.log(jocDesenredar.linies[i],jocDesenredar.linies[j]);
+                jocDesenredar.linies[i].gruix = 5;
+                jocDesenredar.linies[j].gruix = 5;
+            }
+        }
+    }
+}
 
 //////////////////////////////////////////////////////////////////////////////////////
 
