@@ -6,7 +6,7 @@
 * Generación de redes
 * Interfaz
 * Reloj
-
+* Asegurarse de que los auto-generados tienen solución
 
 ## TODO
 
@@ -15,7 +15,7 @@
     - Guardar estadísticas
 - Niveles 1 -> 4 predefinidos 
 - No coje el nombre de usuario correctamente
-- Asegurarse de que los auto-generados tienen solución
+
 
 
 ### Extra
