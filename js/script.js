@@ -160,7 +160,7 @@ $(document).ready(function(){
                 var ratoli = new Punt(e.pageX - canvas.offsetLeft || 0, e.pageY - canvas.offsetTop || 0);
 
                 // TODO - Crear cercle a la posició clicada
-                if(customMode) new Cercle(new Punt(e.pageX - canvas.offsetLeft || 0, e.pageY - canvas.offsetTop || 0),10);
+                if(customMode) jocDesenredar.cercles.push(new Cercle(new Punt(e.pageX - canvas.offsetLeft || 0, e.pageY - canvas.offsetTop || 0),10));
 
                 // mirem si el clic ha estat interior a un cercle
                 for (var i = 0; i < jocDesenredar.cercles.length && !jocDesenredar.cercleClicat; i++) {
@@ -219,28 +219,52 @@ function construirXarxa() {
                 jocDesenredar.cercles.push(new Cercle(new Punt(nivells[0].cercles[i].x ,nivells[0].cercles[i].y ), 10));
                 
             }
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[1].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[1].centre, jocDesenredar.cercles[3].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[2].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[2].centre, jocDesenredar.cercles[3].centre));
         }break;
         case 2:{
             for (var i=0; i<4; i++) {
                 jocDesenredar.cercles.push(new Cercle(new Punt(nivells[1].cercles[i].x ,nivells[1].cercles[i].y ), 10));
             }
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[1].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[1].centre, jocDesenredar.cercles[2].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[2].centre, jocDesenredar.cercles[3].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[3].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[2].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[1].centre, jocDesenredar.cercles[3].centre));
         }break;
         case 3:{
             for (var i=0; i<5; i++) {
                 jocDesenredar.cercles.push(new Cercle(new Punt(nivells[2].cercles[i].x ,nivells[2].cercles[i].y ), 10));
             }
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[1].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[1].centre, jocDesenredar.cercles[2].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[2].centre, jocDesenredar.cercles[3].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[3].centre, jocDesenredar.cercles[0].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[4].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[2].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[1].centre, jocDesenredar.cercles[3].centre));
         }break;
         case 4:{
             for (var i=0; i<5; i++) {
                 jocDesenredar.cercles.push(new Cercle(new Punt(nivells[3].cercles[i].x ,nivells[3].cercles[i].y ), 10));
             }
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[1].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[1].centre, jocDesenredar.cercles[2].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[3].centre, jocDesenredar.cercles[4].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[4].centre, jocDesenredar.cercles[0].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[4].centre, jocDesenredar.cercles[1].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[2].centre, jocDesenredar.cercles[0].centre));
+            jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[0].centre, jocDesenredar.cercles[3].centre));
         }break;
         default:{
             for (var i=0; i<currentLv+3; i++) {
                 jocDesenredar.cercles.push(new Cercle(new Punt(Utilitats.nombreAleatoriEntre(10,jocDesenredar.canvas.width-10),
                     Utilitats.nombreAleatoriEntre(10,jocDesenredar.canvas.height-10)), 10));
-                    connectarCercles();
-            }
+
+            } connectarCercles();
         }
     }
 
@@ -251,12 +275,12 @@ function connectarCercles(){
     jocDesenredar.linies.length = 0;  // buidem l'array de segments
     var plus=1;
     for (var i=0; i<2;i++){
-        for(var j=plus; j<currentLv+3;j++){
+        for(var j=plus; j<jocDesenredar.cercles.length;j++){
             jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[j].centre, jocDesenredar.cercles[i].centre));
         }
         plus++;
     }
-    for(var i=2; i<currentLv+2;i++){
+    for(var i=2; i<jocDesenredar.cercles.length;i++){
         jocDesenredar.linies.push(new Segment(jocDesenredar.cercles[i].centre, jocDesenredar.cercles[i+1].centre));
     }
 }
@@ -322,4 +346,5 @@ $("#startCustom").click(function(e) {
     customMode=false;
     començar=true;
     user = $("#user").value;
+    connectarCercles()
 });
